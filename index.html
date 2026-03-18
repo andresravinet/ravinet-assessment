@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Readiness Assessment | Ravinet Consulting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f1f3d 0%, #1a2a52 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px 30px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .screen {
+            display: none;
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2563eb;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #0f1f3d;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2563eb;
+            transition: width 0.3s ease-in-out;
+            border-radius: 2px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f1f3d;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background: #f9fafb;
+        }
+
+        .option:hover {
+            border-color: #2563eb;
+            background: #f0f6ff;
+        }
+
+        .option.selected {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .option input[type="radio"] {
+            margin-top: 2px;
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #2563eb;
+        }
+
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 15px;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        .text-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .text-input-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #0f1f3d;
+        }
+
+        .text-input-group input,
+        .text-input-group textarea {
+            padding: 12px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s ease-in-out;
+        }
+
+        .text-input-group input:focus,
+        .text-input-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .text-input-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.5;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #1d4ed8;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #333;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #d1d5db;
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .intro-content {
+            text-align: center;
+        }
+
+        .intro-description {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .results-score {
+            background: linear-gradient(135deg, #0f1f3d 0%, #1a2a52 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .score-tier {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .score-description {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .results-section {
+            margin-bottom: 25px;
+        }
+
+        .results-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .results-section-content {
+            font-size: 15px;
+            color: #333;
+            line-height: 1.6;
+            padding: 12px 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s ease-in-out;
+            margin-bottom: 20px;
+        }
+
+        .cta-button:hover {
+            background: #1d4ed8;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 13px;
+            color: #999;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .email-capture-section {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .email-capture-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f1f3d;
+            margin-bottom: 15px;
+        }
+
+        .validation-error {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .validation-error.show {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .results-score {
+                padding: 20px;
+            }
+
+            .score-number {
+                font-size: 36px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Intro Screen -->
+        <div class="screen active" id="screen-intro">
+            <div class="header">
+                <div class="logo">RAVINET CONSULTING</div>
+                <h1>AI Readiness Score</h1>
+            </div>
+            <div class="intro-content">
+                <p class="intro-description">
+                    Find out where you stand on your AI journey. This 7-minute assessment gives mission-driven organizations a clear roadmap.
+                </p>
+                <button class="btn btn-primary" onclick="goToScreen('screen-q1')">Start Assessment</button>
+            </div>
+            <div class="footer-text">Ravinet Consulting · ravinetconsulting.com</div>
+        </div>
+
+        <!-- Question 1 -->
+        <div class="screen" id="screen-q1">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 14%;"></div>
+            </div>
+            <div class="progress-text">Question 1 of 7</div>
+            <div class="question">
+                <div class="question-title">Where are you in your AI journey?</div>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this, 'q1', 1)">
+                        <input type="radio" name="q1" value="1">
+                        <label style="margin: 0;">Never started / still exploring</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q1', 2)">
+                        <input type="radio" name="q1" value="2">
+                        <label style="margin: 0;">Tried it, got limited results</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q1', 3)">
+                        <input type="radio" name="q1" value="3">
+                        <label style="margin: 0;">Have some tools running but nothing systematic</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q1', 4)">
+                        <input type="radio" name="q1" value="4">
+                        <label style="margin: 0;">Ready to scale what's working</label>
+                    </label>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-intro')">Back</button>
+                <button class="btn btn-primary" id="btn-q1" onclick="goToScreen('screen-q2')" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="screen" id="screen-q2">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 29%;"></div>
+            </div>
+            <div class="progress-text">Question 2 of 7</div>
+            <div class="question">
+                <div class="question-title">What's your #1 challenge right now?</div>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this, 'q2', 1)">
+                        <input type="radio" name="q2" value="1">
+                        <label style="margin: 0;">Don't know where to start</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q2', 2)">
+                        <input type="radio" name="q2" value="2">
+                        <label style="margin: 0;">Team buy-in and resistance</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q2', 3)">
+                        <input type="radio" name="q2" value="3">
+                        <label style="margin: 0;">Justifying ROI to leadership or board</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q2', 2)">
+                        <input type="radio" name="q2" value="2">
+                        <label style="margin: 0;">Finding a trustworthy implementation partner</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q2', 2)">
+                        <input type="radio" name="q2" value="2">
+                        <label style="margin: 0;">Time to actually do it</label>
+                    </label>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-q1')">Back</button>
+                <button class="btn btn-primary" id="btn-q2" onclick="goToScreen('screen-q3')" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="screen" id="screen-q3">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 43%;"></div>
+            </div>
+            <div class="progress-text">Question 3 of 7</div>
+            <div class="question">
+                <div class="question-title">Which area would save your team the most time if automated?</div>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this, 'q3', 'admin')">
+                        <input type="radio" name="q3" value="admin">
+                        <label style="margin: 0;">Admin, reporting, or data entry</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q3', 'comms')">
+                        <input type="radio" name="q3" value="comms">
+                        <label style="margin: 0;">Client or donor communications</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q3', 'workflows')">
+                        <input type="radio" name="q3" value="workflows">
+                        <label style="margin: 0;">Internal workflows and approvals</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q3', 'research')">
+                        <input type="radio" name="q3" value="research">
+                        <label style="margin: 0;">Research and content creation</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q3', 'hiring')">
+                        <input type="radio" name="q3" value="hiring">
+                        <label style="margin: 0;">Hiring or onboarding</label>
+                    </label>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-q2')">Back</button>
+                <button class="btn btn-primary" id="btn-q3" onclick="goToScreen('screen-q4')" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="screen" id="screen-q4">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 57%;"></div>
+            </div>
+            <div class="progress-text">Question 4 of 7</div>
+            <div class="question">
+                <div class="question-title">How would you describe your organization?</div>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this, 'q4', 'nonprofit')">
+                        <input type="radio" name="q4" value="nonprofit">
+                        <label style="margin: 0;">Nonprofit / Social impact</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q4', 'professional')">
+                        <input type="radio" name="q4" value="professional">
+                        <label style="margin: 0;">Professional services (consulting, legal, finance)</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q4', 'healthcare')">
+                        <input type="radio" name="q4" value="healthcare">
+                        <label style="margin: 0;">Healthcare or education</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q4', 'other')">
+                        <input type="radio" name="q4" value="other">
+                        <label style="margin: 0;">Other mission-aligned business</label>
+                    </label>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-q3')">Back</button>
+                <button class="btn btn-primary" id="btn-q4" onclick="goToScreen('screen-q5')" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="screen" id="screen-q5">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 71%;"></div>
+            </div>
+            <div class="progress-text">Question 5 of 7</div>
+            <div class="question">
+                <div class="question-title">How many people are on your team?</div>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this, 'q5', 1)">
+                        <input type="radio" name="q5" value="1">
+                        <label style="margin: 0;">1–10</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q5', 2)">
+                        <input type="radio" name="q5" value="2">
+                        <label style="margin: 0;">11–50</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q5', 3)">
+                        <input type="radio" name="q5" value="3">
+                        <label style="margin: 0;">51–200</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q5', 4)">
+                        <input type="radio" name="q5" value="4">
+                        <label style="margin: 0;">200+</label>
+                    </label>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-q4')">Back</button>
+                <button class="btn btn-primary" id="btn-q5" onclick="goToScreen('screen-q6')" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="screen" id="screen-q6">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 86%;"></div>
+            </div>
+            <div class="progress-text">Question 6 of 7</div>
+            <div class="question">
+                <div class="question-title">What's your realistic budget for AI implementation this year?</div>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this, 'q6', 1)">
+                        <input type="radio" name="q6" value="1">
+                        <label style="margin: 0;">Under $5K</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q6', 2)">
+                        <input type="radio" name="q6" value="2">
+                        <label style="margin: 0;">$5K–$15K</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q6', 3)">
+                        <input type="radio" name="q6" value="3">
+                        <label style="margin: 0;">$15K–$50K</label>
+                    </label>
+                    <label class="option" onclick="selectOption(this, 'q6', 4)">
+                        <input type="radio" name="q6" value="4">
+                        <label style="margin: 0;">$50K+</label>
+                    </label>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-q5')">Back</button>
+                <button class="btn btn-primary" id="btn-q6" onclick="goToScreen('screen-q7')" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="screen" id="screen-q7">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%;"></div>
+            </div>
+            <div class="progress-text">Question 7 of 7</div>
+            <div class="question">
+                <div class="question-title">What does success look like in 6 months?</div>
+                <div class="text-input-group">
+                    <textarea id="q7-input" placeholder="Share your vision (no wrong answer)..."></textarea>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-q6')">Back</button>
+                <button class="btn btn-primary" id="btn-q7" onclick="goToScreen('screen-email')">Next</button>
+            </div>
+        </div>
+
+        <!-- Email Capture -->
+        <div class="screen" id="screen-email">
+            <div class="header">
+                <h1>Where should we send your results?</h1>
+            </div>
+            <div class="email-capture-section">
+                <div class="text-input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="email-name" placeholder="Your name">
+                    <div class="validation-error" id="error-name">Please enter your name</div>
+                </div>
+                <div class="text-input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email-address" placeholder="your@email.com">
+                    <div class="validation-error" id="error-email">Please enter a valid email</div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="goToScreen('screen-q7')">Back</button>
+                <button class="btn btn-primary" onclick="validateAndContinue()">See My Results</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="screen" id="screen-results">
+            <div class="header">
+                <div class="logo">YOUR RESULTS</div>
+            </div>
+            <div class="results-score">
+                <div class="score-number" id="result-score">14</div>
+                <div class="score-tier" id="result-tier">Alignment Ready</div>
+                <div class="score-description" id="result-tier-desc"></div>
+            </div>
+
+            <div class="results-section">
+                <div class="results-section-title">Your Top Opportunity</div>
+                <div class="results-section-content" id="result-opportunity"></div>
+            </div>
+
+            <div class="results-section">
+                <div class="results-section-title">What This Means For You</div>
+                <div class="results-section-content" id="result-org-fit"></div>
+            </div>
+
+            <div class="results-section">
+                <div class="results-section-title">Your 6-Month Vision</div>
+                <div class="results-section-content" id="result-q7-display"></div>
+            </div>
+
+            <div class="results-section">
+                <div class="results-section-title">Next Step</div>
+                <div class="results-section-content">
+                    <a href="https://outlook.office.com/bookwithme/user/837b5ff17a6a4e7c846d88a442d66b34@ravinetconsulting.com/meetingtype/Kl5ez9KxKUuwEuSJXml1bQ2?bookingcode=4a2a60ce-1ff0-4ba8-b450-0097be6b188c&anonymous&ismsaljsauthenabled&ep=mlink" class="cta-button" target="_blank" id="result-cta">Book a Free Clarity Call</a>
+                </div>
+            </div>
+
+            <div class="footer-text">Ravinet Consulting · ravinetconsulting.com</div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        const state = {
+            q1: null,
+            q2: null,
+            q3: null,
+            q4: null,
+            q5: null,
+            q6: null,
+            q7: '',
+            name: '',
+            email: ''
+        };
+
+        // Screen navigation
+        function goToScreen(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            // Show target screen
+            document.getElementById(screenId).classList.add('active');
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Option selection
+        function selectOption(element, question, value) {
+            // Deselect all in this question
+            document.querySelectorAll(`input[name="${question}"]`).forEach(input => {
+                input.parentElement.classList.remove('selected');
+            });
+            // Select this option
+            const radio = element.querySelector('input');
+            radio.checked = true;
+            element.classList.add('selected');
+            // Update state
+            state[question] = value;
+            // Enable next button
+            document.getElementById(`btn-${question}`).disabled = false;
+        }
+
+        // Email validation
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Validate and continue to results
+        function validateAndContinue() {
+            const name = document.getElementById('email-name').value.trim();
+            const email = document.getElementById('email-address').value.trim();
+            let isValid = true;
+
+            // Clear errors
+            document.getElementById('error-name').classList.remove('show');
+            document.getElementById('error-email').classList.remove('show');
+
+            if (!name) {
+                document.getElementById('error-name').classList.add('show');
+                isValid = false;
+            }
+
+            if (!validateEmail(email)) {
+                document.getElementById('error-email').classList.add('show');
+                isValid = false;
+            }
+
+            if (isValid) {
+                state.name = name;
+                state.email = email;
+                state.q7 = document.getElementById('q7-input').value.trim();
+
+                // Log to console
+                console.log('Assessment Response:', state);
+
+                // Save to localStorage
+                localStorage.setItem('ravinetAssessment', JSON.stringify(state));
+
+                // Calculate score and show results
+                calculateAndShowResults();
+            }
+        }
+
+        // Calculate score and personalization
+        function calculateAndShowResults() {
+            // Sum Q1, Q2, Q5, Q6 for scoring
+            const score = parseInt(state.q1) + parseInt(state.q2) + parseInt(state.q5) + parseInt(state.q6);
+
+            // Determine tier
+            let tier, tierDesc;
+            if (score >= 5 && score <= 8) {
+                tier = 'Early Explorer';
+                tierDesc = "You're at the beginning of your AI journey. The good news: you're not behind — you're about to leapfrog competitors who adopted AI reactively.";
+            } else if (score >= 9 && score <= 11) {
+                tier = 'Execution Gap';
+                tierDesc = "You've tried AI. Maybe it didn't stick. That's actually the most common story, and it's fixable. The gap isn't tools — it's strategy and alignment.";
+            } else if (score >= 12 && score <= 14) {
+                tier = 'Alignment Ready';
+                tierDesc = "You have the foundation. The challenge now is internal: getting your team, leadership, and board aligned on where AI fits and how to measure it.";
+            } else {
+                tier = 'Scale Mode';
+                tierDesc = "You're ready to move fast. The question isn't whether AI works for your org — it's how to systematize what's working and expand it.";
+            }
+
+            // Determine opportunity based on Q3
+            const opportunities = {
+                admin: "Automating your reporting and admin workflows could reclaim 5–10 hours/week per team member. That's where we'd start.",
+                comms: "AI-assisted communication workflows can dramatically reduce response time and personalize outreach at scale — without losing the human touch.",
+                workflows: "Internal approval and workflow bottlenecks are often the highest-leverage automation targets. Fast to build, immediate ROI.",
+                research: "AI-assisted research and content generation is one of the fastest wins for professional services and nonprofits alike.",
+                hiring: "Automating hiring screening and onboarding documentation is underrated — it frees up leadership time immediately."
+            };
+            const opportunity = opportunities[state.q3] || opportunities.admin;
+
+            // Determine org fit based on Q4
+            const orgFits = {
+                nonprofit: "For nonprofits, AI ROI is often measured in staff hours saved and program capacity gained — not revenue. We build the case for your board.",
+                professional: "You sell time. AI saves time. The ROI math is straightforward — and we help you present it with confidence.",
+                healthcare: "Compliance and trust are non-negotiable in your sector. Our approach builds AI governance in from the start.",
+                other: "Mission-driven organizations often have the strongest case for AI — the impact per dollar saved is undeniable."
+            };
+            const orgFit = orgFits[state.q4] || orgFits.other;
+
+            // Determine CTA based on score
+            const ctaLow = score <= 11;
+            const ctaText = ctaLow ? 'Book a Free Clarity Call — 30 minutes, no pitch, just a roadmap.' : 'Book a Free Strategy Session — let\'s build your AI roadmap.';
+
+            // Update results screen
+            document.getElementById('result-score').textContent = score;
+            document.getElementById('result-tier').textContent = tier;
+            document.getElementById('result-tier-desc').textContent = tierDesc;
+            document.getElementById('result-opportunity').textContent = opportunity;
+            document.getElementById('result-org-fit').textContent = orgFit;
+            document.getElementById('result-q7-display').innerHTML = state.q7 
+                ? `<strong>You said:</strong> "${state.q7}"<br><br>Here's how we'd approach that.` 
+                : 'Share your vision with us.';
+            document.getElementById('result-cta').textContent = ctaText;
+
+            // Show results screen
+            goToScreen('screen-results');
+        }
+
+        // Initialize: load from localStorage if exists
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('ravinetAssessment');
+            if (saved) {
+                Object.assign(state, JSON.parse(saved));
+                console.log('Loaded previous assessment:', state);
+            }
+        });
+    </script>
+</body>
+</html>
