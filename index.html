@@ -765,11 +765,29 @@
                 state.email = email;
                 state.q7 = document.getElementById('q7-input').value.trim();
 
-                // Log to console
-                console.log('Assessment Response:', state);
-
                 // Save to localStorage
                 localStorage.setItem('ravinetAssessment', JSON.stringify(state));
+
+                // POST to Power Automate webhook (M365)
+                const POWER_AUTOMATE_WEBHOOK = 'REPLACE_WITH_POWER_AUTOMATE_URL';
+                if (POWER_AUTOMATE_WEBHOOK !== 'REPLACE_WITH_POWER_AUTOMATE_URL') {
+                    fetch(POWER_AUTOMATE_WEBHOOK, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: state.name,
+                            email: state.email,
+                            q1_journey: state.q1,
+                            q2_challenge: state.q2,
+                            q3_automation_area: state.q3,
+                            q4_org_type: state.q4,
+                            q5_team_size: state.q5,
+                            q6_budget: state.q6,
+                            q7_success_vision: state.q7,
+                            submitted_at: new Date().toISOString()
+                        })
+                    }).catch(err => console.warn('Webhook failed:', err));
+                }
 
                 // Calculate score and show results
                 calculateAndShowResults();
